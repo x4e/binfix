@@ -32,16 +32,20 @@ tasks.withType<KotlinCompile> {
 
 
 dependencies {
-	runtime(kotlin("stdlib-jdk8"))
+	compile(kotlin("stdlib-jdk8"))
+	
+	compile("org.jetbrains.kotlin:kotlin-script-util:1.3.30")
+	
+	compile("org.ow2.asm:asm:7.1")
+	compile("org.ow2.asm:asm-tree:7.1")
+	compile("org.ow2.asm:asm-commons:7.1")
+	compile("org.ow2.asm:asm-util:7.1")
 }
 
 tasks.withType<Jar> {
 	manifest {
-		attributes["Main-Class"] = "dev.binclub.binfix.MainKt"
+		attributes["Main-Class"] = "dev.binclub.binfix.Binfix"
 	}
 	
-	from(configurations.runtime.get().map {if (it.isDirectory) it else zipTree(it)})
+	from(configurations.compile.get().map {if (it.isDirectory) it else zipTree(it)})
 }
-
-
-
