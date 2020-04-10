@@ -10,13 +10,12 @@ buildscript {
 	}
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "dev.binclub"
+version = "1.0"
 
 plugins {
 	kotlin("jvm") version "1.3.71"
 }
-
 sourceSets {
 	getByName("main").java.srcDirs("src/main/")
 }
@@ -24,17 +23,25 @@ sourceSets {
 kotlin.sourceSets {
 	getByName("main").kotlin.srcDirs("src/main/")
 }
-dependencies {
-	implementation(kotlin("stdlib-jdk8"))
-}
 repositories {
 	mavenCentral()
 }
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-	jvmTarget = "1.8"
+tasks.withType<KotlinCompile> {
+	kotlinOptions.jvmTarget = "1.8"
 }
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-	jvmTarget = "1.8"
+
+
+dependencies {
+	runtime(kotlin("stdlib-jdk8"))
 }
+
+tasks.withType<Jar> {
+	manifest {
+		attributes["Main-Class"] = "dev.binclub.binfix.MainKt"
+	}
+	
+	from(configurations.runtime.get().map {if (it.isDirectory) it else zipTree(it)})
+}
+
+
+
