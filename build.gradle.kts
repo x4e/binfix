@@ -34,7 +34,7 @@ tasks.withType<KotlinCompile> {
 dependencies {
 	compile(kotlin("stdlib-jdk8"))
 	
-	compile("org.jetbrains.kotlin:kotlin-script-util:1.3.30")
+	compile("org.jetbrains.kotlin:kotlin-scripting-jsr223:1.3.71")
 	
 	compile("org.ow2.asm:asm:7.1")
 	compile("org.ow2.asm:asm-tree:7.1")

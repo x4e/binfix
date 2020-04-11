@@ -7,9 +7,7 @@ This is meant to be a successor to the now unmaintained [Java Deobfuscator](http
 ## Usage
 Create a config called `config.kts` with the following template:
 ```kotlin
-import dev.binclub.binfix.configuration.deobfuscate
-import dev.binclub.binfix.configuration.libraries
-import dev.binclub.binfix.configuration.processors
+import dev.binclub.binfix.configuration.*
 import dev.binclub.binfix.processors.name.ClassNameProcessor
 
 deobfuscate {
@@ -24,6 +22,7 @@ deobfuscate {
 		+ClassNameProcessor
 	}
 }
+
 ```
 
 Run using `java -jar binfix.jar config.kts`

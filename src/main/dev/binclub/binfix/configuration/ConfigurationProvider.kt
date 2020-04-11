@@ -11,7 +11,9 @@ import kotlin.reflect.KClass
  */
 class ConfigurationContext {
 	var input by Delegates.notNull<String>()
-	var output by nonNullByDefault("${input.substringBeforeLast('.')}-deobf.${input.substringAfterLast('.')}")
+	var output by nonNullByDefault {
+		"${input.substringBeforeLast('.')}-deobf.${input.substringAfterLast('.')}"
+	}
 	
 	internal val libraries: MutableList<String> = arrayListOf()
 	internal val processors: MutableList<IClassProcessor> = arrayListOf()
