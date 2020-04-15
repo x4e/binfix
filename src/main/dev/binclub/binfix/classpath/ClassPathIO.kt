@@ -1,23 +1,20 @@
 package dev.binclub.binfix.classpath
 
+import dev.binclub.binfix.classpath.ClassPath.classPath
+import dev.binclub.binfix.classpath.ClassPath.classes
+import dev.binclub.binfix.classpath.ClassPath.passThrough
 import dev.binclub.binfix.utils.PatchedZipOutputStream
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.tree.ClassNode
 import java.io.File
-import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import java.util.zip.ZipOutputStream
 
 /**
  * @author cookiedragon234 10/Apr/2020
  */
 object ClassPathIO {
-	val classes: MutableList<ClassNode> = arrayListOf()
-	val passThrough: MutableMap<String, ByteArray> = linkedMapOf()
-	val classPath: MutableMap<String, ClassNode> = hashMapOf()
-	
 	fun loadInput(file: File) = loadFile(file, true)
 	
 	fun loadClassPath(file: File) = loadFile(file, false)
