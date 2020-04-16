@@ -1,7 +1,9 @@
 package dev.binclub.binfix
 
+import dev.binclub.binfix.classpath.ClassPath
 import dev.binclub.binfix.classpath.ClassPathIO
 import dev.binclub.binfix.configuration.ConfigurationContext
+import dev.binclub.binfix.processors.name.ClassRemapper
 import java.io.File
 import javax.script.ScriptEngineManager
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
@@ -30,6 +32,11 @@ object Binfix {
 		configurationContext.libraries.forEach {
 			ClassPathIO.loadClassPath(File(it))
 		}
+		
+		for (processor in configurationContext.processors) {
+			processor.process(ClassPath.classes)
+		}
+		
 		ClassPathIO.saveInput(File(configurationContext.output))
 	}
 }

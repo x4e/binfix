@@ -3,6 +3,7 @@ package dev.binclub.binfix.classpath
 import dev.binclub.binfix.classpath.ClassPath.classPath
 import dev.binclub.binfix.classpath.ClassPath.classes
 import dev.binclub.binfix.classpath.ClassPath.passThrough
+import dev.binclub.binfix.utils.CustomClassWriter
 import dev.binclub.binfix.utils.PatchedZipOutputStream
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassWriter
@@ -16,32 +17,31 @@ import java.util.zip.ZipFile
  */
 object ClassPathIO {
 	fun loadInput(file: File) = loadFile(file, true)
-	
 	fun loadClassPath(file: File) = loadFile(file, false)
 	
 	fun saveInput(file: File) {
 		PatchedZipOutputStream(file.outputStream()).use {
+			passThrough.forEach { (name, bytes) ->
+				it.putNextEntry(ZipEntry(name))
+				it.write(bytes)
+			}
+			
 			classes.forEach { classNode ->
 				it.putNextEntry(ZipEntry("${classNode.name}.class"))
 				
 				val bytes = try {
-					ClassWriter(ClassWriter.COMPUTE_FRAMES).also {
+					CustomClassWriter(ClassWriter.COMPUTE_FRAMES).also {
 						classNode.accept(it)
 					}
 				} catch (t: Throwable) {
 					t.printStackTrace()
-					ClassWriter(0).also {
+					CustomClassWriter(0).also {
 						classNode.accept(it)
 					}
 				}.toByteArray()
 				
 				it.write(bytes)
 				it.closeEntry()
-			}
-			
-			passThrough.forEach { (name, bytes) ->
-				it.putNextEntry(ZipEntry(name))
-				it.write(bytes)
 			}
 		}
 	}
@@ -52,9 +52,8 @@ object ClassPathIO {
 				ZipFile(file).use {
 					for (entry in it.entries()) {
 						val name = entry.name.removeSuffix("/")
+						val bytes = it.getInputStream(entry).readBytes()
 						if (name.endsWith(".class") && entry.size > 1) {
-							val bytes = it.getInputStream(entry).readBytes()
-							
 							try {
 								val classNode = ClassNode()
 								ClassReader(bytes).accept(classNode, ClassReader.EXPAND_FRAMES)
@@ -66,6 +65,8 @@ object ClassPathIO {
 								t.printStackTrace()
 								passThrough[entry.name] = bytes
 							}
+						} else {
+							passThrough[entry.name] = bytes
 						}
 					}
 				}

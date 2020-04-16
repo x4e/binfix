@@ -1,5 +1,5 @@
 import dev.binclub.binfix.configuration.*
-import dev.binclub.binfix.processors.name.ClassNameProcessor
+import dev.binclub.binfix.processors.name.ClassRemapper
 
 deobfuscate {
 	input = "input.jar"
@@ -10,6 +10,6 @@ deobfuscate {
 	}
 	
 	processors {
-		+ClassNameProcessor
+		+ClassRemapper
 	}
 }

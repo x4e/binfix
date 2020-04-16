@@ -6,15 +6,16 @@ import dev.binclub.binfix.classpath.classtree.ClassPathTreeEntry
 import dev.binclub.binfix.classpath.classtree.ClassTreeEntry
 import dev.binclub.binfix.utils.block
 import org.objectweb.asm.tree.ClassNode
+import java.util.LinkedList
 
 /**
  * @author cookiedragon234 11/Apr/2020
  */
 object ClassPath {
-	val classes: MutableList<ClassNode> = arrayListOf()
+	val classes: MutableList<ClassNode> = LinkedList()
 	val passThrough: MutableMap<String, ByteArray> = linkedMapOf()
 	val classPath: MutableMap<String, ClassNode> = hashMapOf()
-	val hierarchy = hashMapOf<String, ClassHierarchyEntry>()
+	private val hierarchy = hashMapOf<String, ClassHierarchyEntry>()
 	private val treeEntries = mutableMapOf<String, ClassTreeEntry>()
 	
 	
@@ -69,7 +70,7 @@ object ClassPath {
 	
 	
 	
-	private fun getTreeEntry(className: String): ClassTreeEntry? {
+	fun getTreeEntry(className: String): ClassTreeEntry? {
 		treeEntries[className]?.let {
 			return it
 		}
