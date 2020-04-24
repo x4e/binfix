@@ -19,17 +19,17 @@ import java.util.zip.ZipFile
 object ClassPathIO {
 	fun loadInput(file: File) = loadFile(file, true)
 	fun loadClassPath(file: File) = loadFile(file, false)
-
+	
 	fun saveInput(file: File) {
 		PatchedZipOutputStream(file.outputStream()).use {
 			passThrough.forEach { (name, bytes) ->
 				it.putNextEntry(ZipEntry(name))
 				it.write(bytes)
 			}
-
+			
 			classes.forEach { classNode ->
 				it.putNextEntry(ZipEntry("${classNode.name}.class"))
-
+				
 				val bytes = try {
 					CustomClassWriter(ClassWriter.COMPUTE_FRAMES).also {
 						classNode.accept(it)
@@ -40,13 +40,13 @@ object ClassPathIO {
 						classNode.accept(it)
 					}
 				}.toByteArray()
-
+				
 				it.write(bytes)
 				it.closeEntry()
 			}
 		}
 	}
-
+	
 	private fun loadFile(file: File, isInput: Boolean) {
 		try {
 			if (file.extension == "jar" || file.extension == "zip") {
