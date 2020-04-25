@@ -49,9 +49,9 @@ object ClassPathIO {
 		}
 	}
 	
-	private fun loadFile(file: File, isInput: Boolean) {
+	private fun loadFile(file: File, isInput: Boolean, safe: Boolean = false) {
 		try {
-			if(!file.exists()){
+			if(!safe && !file.exists()){
 				error("File ${file.path} doesn't exist")
 			}
 			if (file.extension == "jar" || file.extension == "zip") {
@@ -79,13 +79,10 @@ object ClassPathIO {
 					}
 				}
 			} else if(file.isDirectory && !isInput) {
-				Files.walk(file.toPath())
-						.filter{!it.toFile().isDirectory}
-						.filter {it.toFile().extension == "jar" || it.toFile().extension == "zip"}
-						.forEach {
-					loadFile(it.toFile(),false)
+				file.listFiles()?.forEach { child ->
+					loadFile(child, isInput)
 				}
-			} else {
+			} else if (!safe) {
 				error("Unsupported file extension ${file.extension}")
 			}
 		} catch (t: Throwable) {
