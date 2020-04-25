@@ -10,6 +10,8 @@ deobfuscate {
 	}
 	
 	processors {
-		+ClassRemapper
+		+ClassRemapper {
+			flattenPackages = false
+		}
 	}
 }

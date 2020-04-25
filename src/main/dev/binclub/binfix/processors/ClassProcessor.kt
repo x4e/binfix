@@ -7,7 +7,6 @@ import kotlin.properties.Delegates
 /**
  * @author cookiedragon234 10/Apr/2020
  */
-abstract class ClassProcessor<T: ProcessorConfiguration> {
-	var configuration: T by Delegates.notNull()
+abstract class ClassProcessor<T: ProcessorConfiguration>(val configuration: T) {
 	abstract fun process(classes: Collection<ClassNode>)
 }

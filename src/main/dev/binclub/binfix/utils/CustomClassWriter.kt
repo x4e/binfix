@@ -56,10 +56,6 @@ class CustomClassWriter(flags: Int): ClassWriter(flags) {
 		val firstTree = ClassPath.getHierarchy(type1) ?: return warn(type1, false)
 		return firstTree.children.any {
 			it.name == type2
-		}.also {
-			if (it) {
-				println("$type1 is assignable from $type2")
-			}
 		}
 	}
 }

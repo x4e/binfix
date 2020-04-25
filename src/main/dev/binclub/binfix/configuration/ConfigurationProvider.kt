@@ -41,6 +41,11 @@ class ProcessorContext(val configurationContext: ConfigurationContext) {
 	
 	operator fun ClassProcessor<*>.unaryPlus() = configurationContext.processors.add(this)
 	operator fun ClassProcessor<*>.unaryMinus() = configurationContext.processors.remove(this)
+	
+	operator fun <T: ProcessorConfiguration, E: ClassProcessor<T>> E.invoke(configurator: T.() -> Unit): E {
+		this.configuration.apply(configurator)
+		return this
+	}
 }
 
 fun ConfigurationContext.processors(contextProvider: ProcessorContext.() -> Unit) {
