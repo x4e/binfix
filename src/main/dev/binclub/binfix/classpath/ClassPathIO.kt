@@ -80,7 +80,7 @@ object ClassPathIO {
 				}
 			} else if(file.isDirectory) {
 				file.listFiles()?.forEach { child ->
-					loadFile(child, isInput)
+					loadFile(child, isInput, true)
 				}
 			} else if (!safe) {
 				error("Unsupported file extension ${file.extension}")
