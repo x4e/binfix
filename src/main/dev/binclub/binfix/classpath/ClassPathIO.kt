@@ -73,12 +73,9 @@ object ClassPathIO {
 						}
 					}
 				}
-			} else if(file.isDirectory && !isInput) {
-				Files.walk(file.toPath())
-						.filter(Files::isRegularFile as Predicate<in Path>)
-						.filter { it.endsWith(".jar") || it.endsWith(".zip") }
-						.forEach {
-					loadFile(it.toFile(),false)
+			} else if(file.isDirectory) {
+				file.listFiles()?.forEach { child ->
+					loadFile(child, isInput)
 				}
 			} else {
 				error("Unsupported file extension ${file.extension}")
