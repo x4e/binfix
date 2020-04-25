@@ -69,10 +69,12 @@ object ClassPathIO {
 								classPath[name.removeSuffix(".class")] = classNode
 							} catch (t: Throwable) {
 								t.printStackTrace()
-								passThrough[entry.name] = bytes
+								if(isInput)
+									passThrough[entry.name] = bytes
 							}
 						} else {
-							passThrough[entry.name] = bytes
+							if(isInput)
+								passThrough[entry.name] = bytes
 						}
 					}
 				}
@@ -84,7 +86,6 @@ object ClassPathIO {
 					loadFile(it.toFile(),false)
 				}
 			} else {
-				println("File was: ${file.path}")
 				error("Unsupported file extension ${file.extension}")
 			}
 		} catch (t: Throwable) {
