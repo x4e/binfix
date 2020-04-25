@@ -51,6 +51,9 @@ object ClassPathIO {
 	
 	private fun loadFile(file: File, isInput: Boolean) {
 		try {
+			if(!file.exists()){
+				error("File ${file.path} doesn't exist")
+			}
 			if (file.extension == "jar" || file.extension == "zip") {
 				ZipFile(file).use {
 					for (entry in it.entries()) {
@@ -75,12 +78,13 @@ object ClassPathIO {
 				}
 			} else if(file.isDirectory && !isInput) {
 				Files.walk(file.toPath())
-						.filter(Files::isRegularFile as Predicate<in Path>)
-						.filter { it.endsWith(".jar") || it.endsWith(".zip") }
+						.filter{!it.toFile().isDirectory}
+						.filter {it.toFile().extension == "jar" || it.toFile().extension == "zip"}
 						.forEach {
 					loadFile(it.toFile(),false)
 				}
 			} else {
+				println("File was: ${file.path}")
 				error("Unsupported file extension ${file.extension}")
 			}
 		} catch (t: Throwable) {
