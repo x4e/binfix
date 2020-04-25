@@ -78,7 +78,7 @@ object ClassPathIO {
 						}
 					}
 				}
-			} else if(file.isDirectory && !isInput) {
+			} else if(file.isDirectory) {
 				file.listFiles()?.forEach { child ->
 					loadFile(child, isInput)
 				}
