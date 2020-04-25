@@ -1,6 +1,7 @@
 package dev.binclub.binfix.configuration
 
 import dev.binclub.binfix.Binfix
+import dev.binclub.binfix.configuration.processor.ProcessorConfiguration
 import dev.binclub.binfix.processors.ClassProcessor
 import dev.binclub.binfix.utils.nonNullByDefault
 import kotlin.properties.Delegates
@@ -16,7 +17,7 @@ class ConfigurationContext {
 	}
 	
 	internal val libraries: MutableList<String> = arrayListOf()
-	internal val processors: MutableList<ClassProcessor> = arrayListOf()
+	internal val processors: MutableList<ClassProcessor<*>> = arrayListOf()
 }
 
 class LibraryContext(val configurationContext: ConfigurationContext) {
@@ -26,20 +27,20 @@ class LibraryContext(val configurationContext: ConfigurationContext) {
 
 class ProcessorContext(val configurationContext: ConfigurationContext) {
 	operator fun String.unaryPlus() = configurationContext.processors.add(
-		Class.forName(this) as ClassProcessor
+		Class.forName(this) as ClassProcessor<*>
 	)
 	operator fun String.unaryMinus() = configurationContext.processors.remove(
-		Class.forName(this) as ClassProcessor
+		Class.forName(this) as ClassProcessor<*>
 	)
 	
-	operator fun Class<out ClassProcessor>.unaryPlus() = configurationContext.processors.add(this.newInstance())
-	operator fun Class<out ClassProcessor>.unaryMinus() = configurationContext.processors.remove(this.newInstance())
+	operator fun Class<out ClassProcessor<*>>.unaryPlus() = configurationContext.processors.add(this.newInstance())
+	operator fun Class<out ClassProcessor<*>>.unaryMinus() = configurationContext.processors.remove(this.newInstance())
 	
-	operator fun KClass<out ClassProcessor>.unaryPlus() = configurationContext.processors.add(this.java.newInstance())
-	operator fun KClass<out ClassProcessor>.unaryMinus() = configurationContext.processors.remove(this.java.newInstance())
+	operator fun KClass<out ClassProcessor<*>>.unaryPlus() = configurationContext.processors.add(this.java.newInstance())
+	operator fun KClass<out ClassProcessor<*>>.unaryMinus() = configurationContext.processors.remove(this.java.newInstance())
 	
-	operator fun ClassProcessor.unaryPlus() = configurationContext.processors.add(this)
-	operator fun ClassProcessor.unaryMinus() = configurationContext.processors.remove(this)
+	operator fun ClassProcessor<*>.unaryPlus() = configurationContext.processors.add(this)
+	operator fun ClassProcessor<*>.unaryMinus() = configurationContext.processors.remove(this)
 }
 
 fun ConfigurationContext.processors(contextProvider: ProcessorContext.() -> Unit) {

@@ -10,6 +10,8 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.tree.ClassNode
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
+import java.util.function.Predicate
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
@@ -73,7 +75,7 @@ object ClassPathIO {
 				}
 			} else if(file.isDirectory && !isInput) {
 				Files.walk(file.toPath())
-						.filter(Files::isRegularFile)
+						.filter(Files::isRegularFile as Predicate<in Path>)
 						.filter { it.endsWith(".jar") || it.endsWith(".zip") }
 						.forEach {
 					loadFile(it.toFile(),false)

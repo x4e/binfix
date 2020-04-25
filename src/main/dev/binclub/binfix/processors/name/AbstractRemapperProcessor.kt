@@ -11,7 +11,7 @@ import org.objectweb.asm.tree.ClassNode
 /**
  * @author cookiedragon234 16/Apr/2020
  */
-abstract class AbstractRemapperProcessor<T: ProcessorConfiguration>: ClassProcessor<T> {
+abstract class AbstractRemapperProcessor<T: ProcessorConfiguration>: ClassProcessor<T>() {
 	override fun process(classes: Collection<ClassNode>) {
 		val remapper = CustomRemapper()
 		remap(remapper, classes)
